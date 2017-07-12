@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Document</title>
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+	}
+	.active{
+		width: 20px;
+		height:20px;
+		display: inline-block;
+		text-align:center;
+		line-height: 20px;
+		border:1px solid blue;
+		border-radius: 50%;
+	}
+</style>
+<body>
+	<ul id="test">
+		
+	</ul>
+	<a id="prev">prev</a>
+		<span onclick="pageto(this)" class="active">1</span>
+		<span onclick="pageto(this)">2</span>
+		<span onclick="pageto(this)" class="tail">3</span>
+	<a id="next">next</a>
+</body>
+<script src="./assets/node_modules/jquery/dist/jquery.js"></script>
+<script>
+	var arr = ['asd','sd','sdf','sdfg','2rwe','ergyer','235we','fgreh','rturu','asd','sd','sdf','sdfg','2rwe','ergyer','235we','fgreh','rturu'];
+
+	function fn(arr,len){
+		var leng = arr.length,
+			m = Math.ceil(leng/len), //sad
+			brr=[];
+			for(var i=0;i<leng;i++){
+				for(var j=0;j<m;j++){
+					brr[j]=[];
+					brr[j].push(arr.slice(j*len,(j+1)*len));
+				}
+			}
+		return brr;
+	}
+	var result = fn(arr,4);
+
+	var index = $('.active').text() - 1;
+		var aa = result[index][0],html='';
+		for(var i=0;i<aa.length;i++){
+			html+=`<li>${aa[i]}</li>`;
+		}
+		$("#test").html(html);
+		
+	var pageto = function(re){
+		var that = re,
+			index = $(that).text() - 1;
+		var aa = result[index][0],html='';
+		for(var i=0;i<aa.length;i++){
+			html+=`<li>${aa[i]}</li>`;
+		}
+		$("#test").html(html);
+		$(that).addClass('active');
+		$(that).siblings().removeClass('active');
+	}
+
+	$("#next").on('click',function(){
+		//得到队尾元素的text值
+		var tailIndex = $('.tail').text();
+		if(parseInt(tailIndex) < result.length){
+			//分别更新三个元素的text 进行加一操作
+			$('.tail').text(parseInt(tailIndex)+1);
+
+			$('.tail').prev().text(tailIndex);
+
+			$('.tail').prev().prev().text(tailIndex - 1);
+		}
+
+		//得到.active的元素并且直接展示视图
+		var index = $('.active').text() - 1;
+		var aa = result[index][0],html='';
+		for(var i=0;i<aa.length;i++){
+			html+=`<li>${aa[i]}</li>`;
+		}
+		$("#test").html(html);
+	});
+
+	$("#prev").on('click',function(){
+		var headIndex = $('.tail').text() - 2;
+		if(headIndex > 1){
+			$('.tail').text(headIndex + 1);
+
+			$('.tail').prev().text(headIndex);
+
+			$('.tail').prev().prev().text(headIndex - 1);
+		}
+
+		var index = $('.active').text() - 1;
+		var aa = result[index][0],html='';
+		for(var i=0;i<aa.length;i++){
+			html+=`<li>${aa[i]}</li>`;
+		}
+		$("#test").html(html);
+	})
+</script>
+</html>
